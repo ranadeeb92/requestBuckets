@@ -1,0 +1,22 @@
+{
+  "name": "requestbucket",
+  "version": "1.0.0",
+  "description": "app server ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "rana",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-multiparty": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.2",
+    "mongoose": "^6.0.6",
+    "uuid": "^8.3.2"
+  }
+}
