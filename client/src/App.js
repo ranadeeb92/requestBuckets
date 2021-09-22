@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import RequestTable from "./components/RequestTable";
 
 const App = () => {
   let [bucket, setBucket] = useState("");
@@ -41,7 +42,7 @@ const App = () => {
 
       {bucketRequests.length !== 0 ? (
         <div>
-          {bucketRequests.map((req, index) => {
+          {/* {bucketRequests.map((req, index) => {
             return (
               <div key={index}>
                 <p>Headers: {JSON.stringify(req.Header)}</p>
@@ -49,7 +50,8 @@ const App = () => {
                 <p>RequestType:{req.RequestType}</p>
               </div>
             );
-          })}
+          })} */}
+          <RequestTable data={bucketRequests} />
         </div>
       ) : (
         <p>Ther are no requests</p>
