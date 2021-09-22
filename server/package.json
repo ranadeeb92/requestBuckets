@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "mongodb": "^4.1.2",
     "mongoose": "^6.0.6",
+    "postgres": "^1.0.2",
     "uuid": "^8.3.2"
   }
 }
