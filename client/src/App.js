@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import RequestTable from "./components/RequestTable";
 import Bucket from "./components/Bucket";
+import io from "socket.io-client";
 
 const showRequest = async (currentBucket) => {
   let res = await fetch(`http://localhost:5000/b/${currentBucket}/inspect`, {
@@ -10,10 +11,15 @@ const showRequest = async (currentBucket) => {
   return data;
 };
 
+const socket = io("http://localhost:5000", {
+  path: "/",
+});
 const App = () => {
   let [bucketRequests, setBucketRequest] = useState([]);
   let [currentBucket, setCurrentBucket] = useState(null);
 
+  socket.emit("chat", { bucketRequests });
+  // socket.disconnect();
   useEffect(() => {
     if (!currentBucket) return;
     const getBucketRequests = async () => {
