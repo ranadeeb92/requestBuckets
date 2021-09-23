@@ -1,56 +1,34 @@
-import { useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";
 import RequestTable from "./components/RequestTable";
+import Bucket from "./components/Bucket";
+
+const showRequest = async (currentBucket) => {
+  let res = await fetch(`http://localhost:5000/b/${currentBucket}/inspect`, {
+    method: "GET",
+  });
+  let data = await res.json();
+  return data;
+};
 
 const App = () => {
-  let [bucket, setBucket] = useState("");
   let [bucketRequests, setBucketRequest] = useState([]);
+  let [currentBucket, setCurrentBucket] = useState(null);
 
-  const craeteBucket = async () => {
-    let res = await fetch("http://localhost:5000/", { method: "POST" });
-    let data = await res.json();
-    setBucketRequest([]);
-    setBucket(data.bucketId);
-  };
-
-  const showRequest = async () => {
-    let res = await fetch(`http://localhost:5000/b/${bucket}/inspect`, {
-      method: "GET",
-    });
-    let data = await res.json();
-    setBucketRequest(data);
-  };
+  useEffect(() => {
+    if (!currentBucket) return;
+    const getBucketRequests = async () => {
+      let requests = await showRequest(currentBucket);
+      setBucketRequest(requests);
+    };
+    getBucketRequests();
+  }, [currentBucket]);
 
   return (
-    <div>
-      <button onClick={craeteBucket}>Create bucket</button>
-      <br />
-      {bucket !== "" ? (
-        <div>
-          <p>{`http://localhost:5000/b/${bucket}`}</p>
-          <br />
-        </div>
-      ) : null}
-
-      <label>BucketId:</label>
-      <input
-        type="text"
-        onChange={(e) => setBucket(e.target.value)}
-        value={bucket}
-      />
-      <button onClick={showRequest}>Show Requests on My bucket</button>
+    <div style={{ margin: "20px" }}>
+      <Bucket setCurrentBucket={setCurrentBucket} />
 
       {bucketRequests.length !== 0 ? (
         <div>
-          {/* {bucketRequests.map((req, index) => {
-            return (
-              <div key={index}>
-                <p>Headers: {JSON.stringify(req.Header)}</p>
-                <p>Body: {req.Body}</p>
-                <p>RequestType:{req.RequestType}</p>
-              </div>
-            );
-          })} */}
           <RequestTable data={bucketRequests} />
         </div>
       ) : (

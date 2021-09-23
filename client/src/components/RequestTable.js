@@ -10,14 +10,13 @@ const RequestTable = ({ data }) => {
   };
 
   return (
-    <div>
-      <h1>Simple Table</h1>
-      <table>
+    <div className="ui segment">
+      <table className="ui celled teal table">
         <thead>
           <tr>
             <th>Request Type</th>
+            <th>Request Headers</th>
             <th>Request Body</th>
-            <th>Request Header</th>
           </tr>
         </thead>
         <tbody>
@@ -25,18 +24,18 @@ const RequestTable = ({ data }) => {
             <tr key={index}>
               <td>{req.RequestType}</td>
               <td>
-                {formateRequestHeaders(JSON.stringify(req.Header)).map(
-                  (header, index) => {
-                    return (
-                      <div>
-                        <tr>
-                          <th>{header[0]}</th>
-                          <td>{header[1]}</td>
-                        </tr>
-                      </div>
-                    );
-                  }
-                )}
+                <div className="ui list">
+                  {formateRequestHeaders(JSON.stringify(req.Header)).map(
+                    (header, index) => {
+                      return (
+                        <div key={index} class="item">
+                          <b>{header[0] + ": "}</b>
+                          {header[1]}
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
               </td>
               <td>{req.Body}</td>
             </tr>
