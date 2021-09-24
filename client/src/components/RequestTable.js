@@ -37,7 +37,7 @@ const RequestTable = ({ data }) => {
                   )}
                 </div>
               </td>
-              <td>{req.Body}</td>
+              <td>{JSON.stringify(req.Body)}</td>
             </tr>
           ))}
         </tbody>
@@ -46,4 +46,5 @@ const RequestTable = ({ data }) => {
   );
 };
 
+// formate the body
 export default RequestTable;

@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 const Bucket = ({ setCurrentBucket }) => {
   let [bucketInput, setBucketInput] = useState("");
   let [validBucket, setvalidBucket] = useState(false);
+
   useEffect(() => {
-    checkBucketValidation(bucketInput);
+    if (bucketInput) {
+      checkBucketValidation(bucketInput);
+    }
   }, [bucketInput]);
 
   const craeteBucket = async () => {
@@ -24,7 +27,7 @@ const Bucket = ({ setCurrentBucket }) => {
   };
 
   return (
-    <div className="ui segments">
+    <div>
       <div className="ui placeholder segment">
         <div className="ui two column stackable center aligned grid">
           <div className="ui vertical divider">Or</div>

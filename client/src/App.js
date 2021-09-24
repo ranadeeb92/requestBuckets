@@ -3,6 +3,8 @@ import RequestTable from "./components/RequestTable";
 import Bucket from "./components/Bucket";
 import io from "socket.io-client";
 
+let socket;
+
 const showRequest = async (currentBucket) => {
   let res = await fetch(`http://localhost:5000/b/${currentBucket}/inspect`, {
     method: "GET",
@@ -11,28 +13,58 @@ const showRequest = async (currentBucket) => {
   return data;
 };
 
-const socket = io("http://localhost:5000", {
-  path: "/",
-});
 const App = () => {
   let [bucketRequests, setBucketRequest] = useState([]);
   let [currentBucket, setCurrentBucket] = useState(null);
 
-  socket.emit("chat", { bucketRequests });
-  // socket.disconnect();
+  socket = io("http://localhost:5000/", { path: "/inspect" });
+  socket.on("chat", async (bId) => {
+    console.log("connected", bId);
+    let requests = await showRequest(bId.bucketId);
+    console.log("requests", requests);
+    setBucketRequest(requests);
+  });
+  socket.on("dissconnect", () => {
+    console.log("dissconnected");
+  });
+  console.log(currentBucket);
+  // useEffect(() => {
+  //   console.log("inside useEffect");
+  //   if (!currentBucket) {
+  //     setBucketRequest([]);
+  //   }
+  //   socket = io("http://localhost:5000/", { path: "/inspect" });
+  //   socket.on("chat", async (bId) => {
+  //     console.log("connected", bId);
+  //     let requests = await showRequest(currentBucket);
+  //     console.log("requests", requests);
+  //     setBucketRequest(requests);
+  //   });
+  //   socket.on("dissconnect", () => {
+  //     console.log("dissconnected");
+  //   });
+  // }, [currentBucket]);
+
   useEffect(() => {
-    if (!currentBucket) return;
-    const getBucketRequests = async () => {
+    if (!currentBucket) {
+      setBucketRequest([]);
+      return;
+    }
+    const getRequest = async () => {
       let requests = await showRequest(currentBucket);
+      console.log("requests", requests);
       setBucketRequest(requests);
     };
-    getBucketRequests();
+
+    getRequest();
   }, [currentBucket]);
 
   return (
-    <div style={{ margin: "20px" }}>
+    <div className="ui segments" style={{ padding: "20px" }}>
+      <div class="ui teal center aligned basic segment huge header">
+        Request Buckets
+      </div>
       <Bucket setCurrentBucket={setCurrentBucket} />
-
       {bucketRequests.length !== 0 ? (
         <div>
           <RequestTable data={bucketRequests} />

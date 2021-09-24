@@ -8,6 +8,7 @@ db.connect();
 
 // create bucket
 router.post("/", async (req, res) => {
+  console.log("kdhf");
   let bucketId = "";
   do {
     let uniqueId = uuid.v4();

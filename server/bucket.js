@@ -12,6 +12,7 @@ router.use(express.urlencoded({ extended: true }));
 
 router.get("/:bucketId/inspect", async (req, res) => {
   const bucketId = req.params.bucketId;
+
   if (!(await db.exists(bucketId))) {
     res.status(404).send();
   }
@@ -20,6 +21,7 @@ router.get("/:bucketId/inspect", async (req, res) => {
 });
 
 router.get("/:bucketId", async (req, res) => {
+  let io = req.app.get("socketio");
   const bucketId = req.params.bucketId;
   if (!(await db.exists(bucketId))) {
     res.status(404).send();
@@ -29,21 +31,43 @@ router.get("/:bucketId", async (req, res) => {
     Body: null,
     RequestType: "GET",
   });
-  res.status(200).send();
+  io.emit("chat", { bucketId });
+  res.status(200).end();
 });
 
 router.post("/:bucketId", multipartMiddleware, async (req, res) => {
+  let io = req.app.get("socketio");
   const bucketId = req.params.bucketId;
   if (!(await db.exists(bucketId))) {
     res.status(404).send();
+  }
+  if (Object.keys(req.body).length === 0) {
+    req.body = "{}";
   }
   await db.addRequest(bucketId, {
     Header: req.headers,
     Body: req.body,
     RequestType: "POST",
   });
-  res.status(200).send();
+  io.emit("chat", { bucketId });
+  res.status(200).end();
 });
+
+//const sockets = {};
+// await io.on("connect", (socket) => {
+//   console.log("Made socket connection");
+//   if (sockets[bucketId]) {
+//     sockets[bucketId].push(socket);
+//   } else {
+//     sockets[bucketId] = [socket];
+//   }
+
+// socket.on("disconnect", () => {
+//   sockets[bucketId] = sockets[bucketId].filter((s) => s.id !== socket.id);
+// });
+
+//socket.emit("chat", { key: "hey" });
+//});
 
 //router.get("/:bucketId/inspect", (req, res) => {
 // const bucketId = req.params.bucketId;
