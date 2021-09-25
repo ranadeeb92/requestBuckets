@@ -2,18 +2,17 @@
 
 // let connection = null;
 
-// const connect = (server, bucketID) => {
+// const connect = (server, corsOriginURL) => {
 //   //const io = require("socket.io")(server);
 //   const io = new Server(server, {
-//     path: `/${bucketID}`,
 //     cors: {
-//       origin: "http://localhost:3000",
+//       origin: corsOriginURL,
 //       methods: ["GET", "POST"],
 //     },
 //   });
 
 //   io.on("connection", (socket) => {
-//     //console.log(socket, "connection");
+//     console.log(socket, "connection");
 //     connection = socket;
 //     socket.on("statusConnetion", (data) => {
 //       console.log(data);
